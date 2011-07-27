@@ -1,0 +1,18 @@
+﻿## Interface: 40200
+## Author: Romig
+## Title: MiniMainBar
+## Notes: Cuts the MainMenuBar down to size. 
+## OptionalDeps: Ace3
+## SavedVariables: MiniMainBarDB
+
+embeds.xml
+core.lua
+options.lua
+micromenu.lua
+micromenu.xml
+bags.lua
+bags.xml
+pet.lua
+pet.xml
+stance.lua
+stance.xml
