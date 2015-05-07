@@ -1,4 +1,5 @@
 
+
 local defaults = {
 	profile = {
 		MainMenuBarScale = 1,
@@ -63,26 +64,27 @@ MiniMainBar = LibStub("AceAddon-3.0"):NewAddon("MiniMainBar", "AceConsole-3.0", 
 function MiniMainBar:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("MiniMainBarDB", defaults, "Default")
 
-	-- TODO: Actually implement profiles.
-	self.db.RegisterCallback(self, "OnProfileChanged", "UpdateFromProfile")
-	self.db.RegisterCallback(self, "OnProfileCopied", "UpdateFromProfile")
-	self.db.RegisterCallback(self, "OnProfileReset", "UpdateFromProfile")
-
 	-- Main UI update hooks
+	self:SecureHook("MainMenuBar_OnEvent", MiniMainBar.UpdateGUI)
 	self:SecureHook("UIParent_ManageFramePositions", MiniMainBar.UpdateGUI)
-	self:SecureHook("MainMenuBar_ToPlayerArt", MiniMainBar.UpdateGUI)
-	self:SecureHook("ShapeshiftBar_OnEvent", MiniMainBar.UpdateGUI)
-	self:SecureHook("PossessBar_OnEvent", MiniMainBar.UpdateGUI)
+	self:SecureHook("OverrideActionBar_OnEvent", MiniMainBar.UpdateGUI)
+	self:SecureHook("StanceBar_OnEvent", MiniMainBar.UpdateGUI)
+	self:SecureHook("PossessBar_Update", MiniMainBar.UpdateGUI)
 	self:SecureHook("PetActionBar_OnEvent", MiniMainBar.UpdateGUI)
+	
+	MiniMainBar_StanceBar:RegisterEvent("PLAYER_ENTERING_WORLD", MiniMainBar.UpdateGUI)
+	MiniMainBar_StanceBar:RegisterEvent("UPDATE_SHAPESHIFT_FORMS", MiniMainBar.UpdateGUI)
 	
 	MiniMainBar:InitOptions()
 	MiniMainBar:InitGUI()
-	MiniMainBar:InitVehicleGUI()
 end
 
-function MiniMainBar:UpdateFromProfile()
-
+function MiniMainBar:OnEvent(event, ...)
+	if event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_SHAPESHIFT_FORMS" then
+		MiniMainBar:UpdateGUI()
+	end
 end
+
 
 function MiniMainBar:InitGUI()
 	MiniMainBar:InitMainMenuBar()
@@ -92,17 +94,27 @@ function MiniMainBar:InitGUI()
 	MiniMainBar:InitStanceBar()
 end
 
-function MiniMainBar:InitVehicleGUI()
-
-end
-
 function MiniMainBar:UpdateGUI()
-	if UnitHasVehicleUI("player") then return end
+	if (UnitHasVehicleUI("player")) then 
+	    -- TODO: Future spot of a function call to alter vehicle bar.
+		--OverrideActionBar:SetWidth(600)
+		--OverrideActionBar["Divider2"]:Hide()
+		--OverrideActionBar["Divider3"]:Hide()
+		--OverrideActionBar["MicroBGL"]:Hide()
+		--OverrideActionBar["MicroBGR"]:Hide()
+		--OverrideActionBar["_MicroBGMid"]:Hide()
+		return 
+	end
 
 	-- If changing forms in combat Blizzard code will show these bars so they're hidden before the noncombat code.
-	ShapeshiftBarFrame:Hide()
-	PossessBarFrame:Hide()
+	StanceBarFrame:Hide()
 	PetActionBarFrame:Hide()
+		
+	StanceBarLeft:Hide()
+	StanceBarMiddle:Hide()
+	StanceBarRight:Hide()
+	PossessBackground1:Hide()
+	PossessBackground2:Hide()
 	
 	if InCombatLockdown() then
 		MiniMainBar:CloneBlizzardExpBarSetup(512)
@@ -114,10 +126,6 @@ function MiniMainBar:UpdateGUI()
 	MiniMainBar:UpdateBagsBar()
 	MiniMainBar:UpdatePetBar()
 	MiniMainBar:UpdateStanceBar()
-end
-
-function MiniMainBar:UpdateVehicleGUI()
-
 end
 
 function MiniMainBar:CloneBlizzardExpBarSetup(width)
@@ -194,6 +202,9 @@ function MiniMainBar:InitMainMenuBar()
 	MainMenuMaxLevelBar2:SetTexture(nil)
 	MainMenuMaxLevelBar3:SetTexture(nil)
 	
+	PossessBarFrame:ClearAllPoints()
+	PossessBarFrame:SetPoint("BOTTOMLEFT", MultiBarBottomLeft, "BOTTOMLEFT", 0, 42)
+	
 	-- Resize MainMenuBar 
 	MainMenuBar:SetWidth(512)
 	ReputationWatchBar:SetWidth(512)
@@ -204,21 +215,31 @@ end
 
 function MiniMainBar:UpdateMainMenuBar()
 	local level = UnitLevel("player")
-
+	local PossessOffset
+	
 	if level < MAX_PLAYER_LEVEL and not IsXPUserDisabled() then
 		MiniMainBar:CloneBlizzardExpBarSetup(512)
 	end
 
 	if MultiBarBottomRight:IsShown() then
 		local YOffset = 0
+		PossessOffset = 84
 		
 		if MultiBarBottomLeft:IsShown() then
 			YOffset = 42
+			PossessOffset = 126
 		end
 		
 		MultiBarBottomRight:ClearAllPoints()
 		MultiBarBottomRight:SetPoint("BOTTOMLEFT", MultiBarBottomLeft, "BOTTOMLEFT", 0, YOffset)
-	end	
+	elseif MultiBarBottomLeft:IsShown() then
+		PossessOffset = 84
+	else
+		PossessOffset = 42	
+	end
+	
+	PossessBarFrame:ClearAllPoints()
+	PossessBarFrame:SetPoint("TOPLEFT", MainMenuBar, "TOPLEFT", 0, PossessOffset)
 	
 	MiniMainBar:HideGryphons(self.db.profile.MainMenuBarGryphonsHidden)
 	MiniMainBar:ScaleMainMenuBar(self.db.profile.MainMenuBarScale)
@@ -226,7 +247,8 @@ end
 
 function MiniMainBar:ScaleMainMenuBar(scale)
 	MainMenuBar:SetScale(scale)
-	VehicleMenuBar:SetScale(scale)
+	OverrideActionBar:SetScale(scale)
+	PossessBarFrame:SetScale(scale)
 end
 
 function MiniMainBar:HideGryphons(hidden)
