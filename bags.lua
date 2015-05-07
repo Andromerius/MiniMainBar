@@ -76,7 +76,7 @@ function MiniMainBar:HideBagsBar(hidden)
 				button:EnableMouse(true)
 			end
 		else
-			MiniMainBar_MicroMenu:EnableMouse(false)
+			MiniMainBar_BagsBar:EnableMouse(false)
 			
 			for i = 1, #BagsBarItems do
 				local button = BagsBarItems[i]
