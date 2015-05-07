@@ -7,14 +7,16 @@ local MicroMenuButtons = {
 	GuildMicroButton, 
 	PVPMicroButton, 
 	LFDMicroButton,
+	CompanionsMicroButton,
 	EJMicroButton,
-	RaidMicroButton,
-	MainMenuMicroButton, 
+	StoreMicroButton,
+	MainMenuMicroButton,
 	HelpMicroButton
 }
 
 function MiniMainBar:InitMicroMenu()
-	for i = 1, #MicroMenuButtons do
+	for i,v in pairs(MicroMenuButtons) do
+-- for i = 1, #MicroMenuButtons do
 		local button = MicroMenuButtons[i]
 		button:SetParent(MiniMainBar_MicroMenu)
 		
@@ -47,7 +49,8 @@ function MiniMainBar:UpdateMicroMenu()
 		MiniMainBar_MicroMenu:SetSize(vertical_width, vertical_height)
 	end 
 	
-	for i = 1, #MicroMenuButtons do
+	for i,v in pairs(MicroMenuButtons) do
+-- for i = 1, #MicroMenuButtons do
 		local button = MicroMenuButtons[i]
 		button:ClearAllPoints()
 		
@@ -74,7 +77,8 @@ end
 
 function MiniMainBar:UpdateMicroButtons()
 	-- Blizzard code resets the UIParent of the micromenu buttons, so we override that here.
-	for i = 1, #MicroMenuButtons do
+	for i,v in pairs(MicroMenuButtons) do
+-- for i = 1, #MicroMenuButtons do
 		local button = MicroMenuButtons[i]
 		button:SetParent(MiniMainBar_MicroMenu)
 	end
@@ -88,14 +92,16 @@ function MiniMainBar:HideMicroMenu(hidden)
 		if MiniMainBar.db.profile.MicroMenuShowOnMouse then
 			MiniMainBar_MicroMenu:EnableMouse(true)
 			
-			for i = 1, #MicroMenuButtons do
+			for i,v in pairs(MicroMenuButtons) do
+-- for i = 1, #MicroMenuButtons do
 				local button = MicroMenuButtons[i]
 				button:EnableMouse(true)
 			end
 		else
 			MiniMainBar_MicroMenu:EnableMouse(false)
 			
-			for i = 1, #MicroMenuButtons do
+			for i,v in pairs(MicroMenuButtons) do
+-- for i = 1, #MicroMenuButtons do
 				local button = MicroMenuButtons[i]
 				button:EnableMouse(false)
 			end
@@ -105,7 +111,8 @@ function MiniMainBar:HideMicroMenu(hidden)
 		MiniMainBar_MicroMenu:EnableDrawLayer()
 		MiniMainBar_MicroMenu:EnableMouse(true)
 		
-		for i = 1, #MicroMenuButtons do
+		for i,v in pairs(MicroMenuButtons) do
+-- for i = 1, #MicroMenuButtons do
 			local button = MicroMenuButtons[i]
 			button:EnableMouse(true)
 		end
