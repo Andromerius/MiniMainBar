@@ -1,9 +1,13 @@
-﻿## Interface: 40200
-## Author: Romig
+## Interface: 60100
+## Author: Andromerius (asilva)
 ## Title: MiniMainBar
-## Notes: Cuts the MainMenuBar down to size. 
+## Notes: 
 ## OptionalDeps: Ace3
 ## SavedVariables: MiniMainBarDB
+## X-Curse-Packaged-Version: 0.9.4b
+## X-Curse-Project-Name: MiniMainBar
+## X-Curse-Project-ID: minimainbar
+## X-Curse-Repository-ID: wow/minimainbar/mainline
 
 embeds.xml
 core.lua
