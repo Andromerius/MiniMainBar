@@ -1,88 +1,50 @@
-UIPARENT_MANAGED_FRAME_POSITIONS["ShapeshiftBarFrame"] = nil
+UIPARENT_MANAGED_FRAME_POSITIONS["StanceBarFrame"] = nil
 UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
-UIPARENT_MANAGED_FRAME_POSITIONS["MultiCastActionBarFrame"] = nil
 	
 function MiniMainBar:InitStanceBar()
+	local numForms = GetNumShapeshiftForms()
+	
 	for i = 1, 10 do
-		local button = _G["ShapeshiftButton" .. tostring(i)]
+		local button = _G["StanceButton" .. tostring(i)]
 		button:SetParent(MiniMainBar_StanceBar)
 		
 		button:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
 		button:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)
 	end
 	
-	local button = _G["ShapeshiftButton" .. tostring(1)]
+	local button = _G["StanceButton" .. tostring(1)]
 	button:ClearAllPoints()
 	button:SetPoint("BOTTOMLEFT", MiniMainBar_StanceBar, "BOTTOMLEFT", 6, 8)
-	
-	for i = 1, 2 do
-		local button = _G["PossessButton" .. tostring(i)]
-		button:SetParent(MiniMainBar_StanceBar)
-		
-		button:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-		button:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)
-	end	
-	
-	for i = 1, 4 do
-		local button = _G["MultiCastSlotButton"..i]	
-		button:SetParent(MiniMainBar_StanceBar)
-		button:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-		button:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)				
-	end
-	
-	for i = 1, 12 do
-		local button = _G["MultiCastActionButton"..i]
-		button:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-		button:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)
-	end
 
-			
-	--MultiCastActionPage1:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-	--MultiCastActionPage1:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)
-	--MultiCastActionPage2:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-	--MultiCastActionPage2:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)
-	--MultiCastActionPage3:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-	--MultiCastActionPage3:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)
-	MultiCastRecallSpellButton:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-	MultiCastFlyoutFrameOpenButton:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-	--MultiCastFlyoutFrameOpenButton:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)
-	
-	MultiCastSummonSpellButton:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-	--MultiCastSummonSpellButton:HookScript("OnClick",  MiniMainBar_StanceBar_OnMouseOut)
-	MultiCastFlyoutFrameCloseButton:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-	MultiCastFlyoutFrameCloseButton:HookScript("OnClick",  MiniMainBar_StanceBar_OnMouseOut)
-	MultiCastFlyoutFrame:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-	--MultiCastFlyoutFrame:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)
-	
-	MultiCastActionBarFrame:SetParent(MiniMainBar_StanceBar)
-	MultiCastActionBarFrame:ClearAllPoints()	
-	MultiCastActionBarFrame:SetScript("OnShow", nil)
-	MultiCastActionBarFrame:SetScript("OnHide", nil)
-	MultiCastActionBarFrame:SetScript("OnUpdate", nil)
-	MultiCastActionBarFrame:SetPoint("BOTTOMLEFT", MiniMainBar_StanceBar, "BOTTOMLEFT", 6, 4)
-	MultiCastActionBarFrame:HookScript("OnEnter",  MiniMainBar_StanceBar_OnMouseOver)
-	MultiCastActionBarFrame:HookScript("OnLeave",  MiniMainBar_StanceBar_OnMouseOut)
-	
 	MiniMainBar:HideStanceBar(self.db.profile.StanceBarHidden)
 	MiniMainBar:LockStanceBar(self.db.profile.StanceBarLocked)
 	MiniMainBar:ScaleStanceBar(self.db.profile.StanceBarScale)
 end
 
+function MiniMainBar:HideStanceButtons()
+	for i = 1, 10 do
+			local button = _G["StanceButton" .. tostring(i)]
+			button:Hide()
+	end
+end
+
+function MiniMainBar:ShowStanceButtons()
+	for i = 1, GetNumShapeshiftForms() do
+			local button = _G["StanceButton" .. tostring(i)]
+			button:Show()
+	end
+end
+
 function MiniMainBar:UpdateStanceBar()
-	ShapeshiftBarLeft:Hide()
-    ShapeshiftBarMiddle:Hide()
-    ShapeshiftBarRight:Hide()
-    PossessBackground1:Hide()
-    PossessBackground2:Hide()
-	
-	local button = _G["ShapeshiftButton" .. tostring(1)]
-	button:ClearAllPoints()
-	button:SetPoint("BOTTOMLEFT", MiniMainBar_StanceBar, "BOTTOMLEFT", 6, 8)	
-	
-	local button = _G["PossessButton" .. tostring(1)]
-	button:ClearAllPoints()
-	button:SetPoint("BOTTOMLEFT", MiniMainBar_StanceBar, "BOTTOMLEFT", 6, 8)
-	
+	if (GetNumShapeshiftForms() > 0) then
+		MiniMainBar:ShowStanceButtons()
+				
+		local button = _G["StanceButton" .. tostring(1)]
+		button:ClearAllPoints()
+		button:SetPoint("BOTTOMLEFT", MiniMainBar_StanceBar, "BOTTOMLEFT", 6, 8)
+	end
+		
+		
 	MiniMainBar:HideStanceBar(self.db.profile.StanceBarHidden)
 	MiniMainBar:LockStanceBar(self.db.profile.StanceBarLocked)
 	MiniMainBar:ScaleStanceBar(self.db.profile.StanceBarScale)
@@ -95,6 +57,10 @@ function MiniMainBar:UpdateStanceBar()
 		self.db.profile.StanceBarPoint.XOffset, 
 		self.db.profile.StanceBarPoint.YOffset
 	)
+	
+	if (GetNumShapeshiftForms() == 0) then
+		MiniMainBar:HideStanceButtons()
+	end
 end
 
 function MiniMainBar:HideStanceBar(hidden)
@@ -106,24 +72,14 @@ function MiniMainBar:HideStanceBar(hidden)
 			MiniMainBar_StanceBar:EnableMouse(true)
 			
 			for i = 1, 10 do
-				local button = _G["ShapeshiftButton" .. tostring(i)]
-				button:EnableMouse(true)
-			end
-			
-			for i = 1, 2 do
-				local button = _G["PossessButton" .. tostring(i)]
+				local button = _G["StanceButton" .. tostring(i)]
 				button:EnableMouse(true)
 			end
 		else
 			MiniMainBar_StanceBar:EnableMouse(false)
 			
 			for i = 1, 10 do
-				local button = _G["ShapeshiftButton" .. tostring(i)]
-				button:EnableMouse(false)
-			end
-			
-			for i = 1, 2 do
-				local button = _G["PossessButton" .. tostring(i)]
+				local button = _G["StanceButton" .. tostring(i)]
 				button:EnableMouse(false)
 			end
 		end
@@ -133,12 +89,7 @@ function MiniMainBar:HideStanceBar(hidden)
 		MiniMainBar_StanceBar:EnableMouse(true)
 
 		for i = 1, 10 do
-			local button = _G["ShapeshiftButton" .. tostring(i)]
-			button:EnableMouse(true)
-		end
-		
-		for i = 1, 2 do
-			local button = _G["PossessButton" .. tostring(i)]
+			local button = _G["StanceButton" .. tostring(i)]
 			button:EnableMouse(true)
 		end
 	end
@@ -160,6 +111,7 @@ end
 
 function MiniMainBar:ScaleStanceBar(scale)
 	MiniMainBar_StanceBar:SetScale(scale)
+	PossessBarFrame:SetScale(scale)
 end
 
 function MiniMainBar_StanceBar_OnDragStart()
